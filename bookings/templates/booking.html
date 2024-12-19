@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Event Booking</title>
+</head>
+<body>
+  <h1>Book Your Event</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Calculate Total Price</button>
+  </form>
+
+  {% if total_price is not None %}
+    <h2>Total Price: {{ total_price }}</h2>
+    {% if discount > 0 %}
+      <p>Discount Applied: {{ discount }}</p>
+    {% endif %}
+  {% endif %}
+</body>
+</html>
