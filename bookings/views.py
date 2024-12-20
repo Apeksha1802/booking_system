@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .forms import BookingForm
 from .models import Coupon
+from django.core.exceptions import ValidationError
 # Create your views here.
 
 def book_event(request):
@@ -26,8 +27,7 @@ def book_event(request):
           total_price -= discount_amount
           discount_message = f"Coupon applied! {coupon.discount_percentage}% off."
         except Coupon.DoesNotExist:
-          discount_message = "Invalid coupon code."
-          discount_amount = 0
+          raise ValidationError("Invalid Coupon Code")
 
       #save the total price and book the booking
       booking.total_price = total_price
