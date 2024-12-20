@@ -4,30 +4,39 @@ from .models import Coupon
 # Create your views here.
 
 def book_event(request):
+  form = BookingForm()
   total_price = None
-  discount = 0
+  discount_amount = None
+  discount_message = None
 
-  if request.method == "POST":
+  if request.method == 'POST':
     form = BookingForm(request.POST)
     if form.is_valid():
-      event_name = form.cleaned_data['event_name']
-      number_of_tickets = form.cleaned_data['number_of_tickets']
-      price_per_ticket = form.cleaned_data['price_per_ticket']
-      coupon_code = form.cleaned_data['coupon_code']
+      booking = form.save(commit=False) # Save data to the model instance but don't commit yet
+      coupon_code = form.cleaned_data.get('coupon_code')
 
-      # Calculate total price
-      total_price = number_of_tickets * price_per_ticket
+      # Calculate the total price
+      total_price = booking.number_of_tickets * booking.price_per_ticket
 
-      # Apply coupon discount if valid
+      # Validate the coupon code and calculate discount
       if coupon_code:
         try:
           coupon = Coupon.objects.get(code=coupon_code)
-          discount = (coupon.discount_percentage / 100) * total_price
-          total_price -= discount
+          discount_amount = (coupon.discount_percentage / 100) * total_price
+          total_price -= discount_amount
+          discount_message = f"Coupon applied! {coupon.discount_percentage}% off."
         except Coupon.DoesNotExist:
-          form.add_error('coupon_code', 'Invalid coupon code.')
+          discount_message = "Invalid coupon code."
+          discount_amount = 0
 
-  else:
-    form = BookingForm()
+      # Save the total price and commit the booking
+      booking.total_price = total_price
+      booking.save()
 
-  return render(request, 'booking.html', {'form': form,'total_price': total_price,'discount': discount})
+  return render(request, 'booking.html', {
+    'form': form,
+    'total_price': total_price,
+    'discount_amount': discount_amount,
+    'discount_message': discount_message,
+  })
+

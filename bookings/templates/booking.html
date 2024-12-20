@@ -1,10 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Event Booking</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Event</title>
 </head>
 <body>
-  <h1>Book Your Event</h1>
+  <h1>Book Event</h1>
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
@@ -13,8 +15,11 @@
 
   {% if total_price is not None %}
     <h2>Total Price: {{ total_price }}</h2>
-    {% if discount > 0 %}
-      <p>Discount Applied: {{ discount }}</p>
+    {% if discount_amount %}
+      <h3>Discount Applied: {{ discount_amount }}</h3>
+    {% endif %}
+    {% if discount_message %}
+      <p>{{ discount_message }}</p>
     {% endif %}
   {% endif %}
 </body>
