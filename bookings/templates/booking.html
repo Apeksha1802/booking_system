@@ -7,10 +7,10 @@
 </head>
 <body>
   <h1>Book Event</h1>
-  <form method="post">
+  <form method="POST">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Calculate Total Price</button>
+    <button type="submit">Book and Calculate</button>
   </form>
 
   {% if total_price is not None %}

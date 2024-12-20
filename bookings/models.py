@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 
+#model for booking
 class Booking(models.Model):
   event_name = models.CharField(max_length=100)
   number_of_tickets = models.PositiveIntegerField()
@@ -11,6 +12,7 @@ class Booking(models.Model):
   def __str__(self):
     return self.event_name
 
+#model for coupon
 class Coupon(models.Model):
   code = models.CharField(max_length=20, unique=True)
   discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)

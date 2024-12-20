@@ -12,13 +12,13 @@ def book_event(request):
   if request.method == 'POST':
     form = BookingForm(request.POST)
     if form.is_valid():
-      booking = form.save(commit=False) # Save data to the model instance but don't commit yet
+      booking = form.save(commit=False) #saving data 
       coupon_code = form.cleaned_data.get('coupon_code')
 
-      # Calculate the total price
+      #calculating total price
       total_price = booking.number_of_tickets * booking.price_per_ticket
 
-      # Validate the coupon code and calculate discount
+      #validating coupon code and calculating discount
       if coupon_code:
         try:
           coupon = Coupon.objects.get(code=coupon_code)
@@ -29,14 +29,9 @@ def book_event(request):
           discount_message = "Invalid coupon code."
           discount_amount = 0
 
-      # Save the total price and commit the booking
+      #save the total price and book the booking
       booking.total_price = total_price
       booking.save()
 
-  return render(request, 'booking.html', {
-    'form': form,
-    'total_price': total_price,
-    'discount_amount': discount_amount,
-    'discount_message': discount_message,
-  })
+  return render(request, 'booking.html', {'form': form,'total_price': total_price,'discount_amount': discount_amount,'discount_message': discount_message,})
 
